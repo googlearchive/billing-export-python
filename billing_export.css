@@ -1,0 +1,94 @@
+main {
+    padding-top: 60px;
+}
+
+.container {
+    width: 80%;
+}
+
+.navbar-inverse {
+    background-color: #f1f1f1;
+    border-color: #f1f1f1;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #404040;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #000;
+}
+
+.btn-primary {
+    background-color: #d14836;
+    border-color: #d14836;
+    background-image: -webkit-linear-gradient(top,#dd4b39,#d14836);
+    background-image: linear-gradient(top,#dd4b39,#d14836);
+    color: #fff;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: #d14836;
+    border-color: #d14836;
+    background-image: none;
+}
+
+.loading-container {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1000;
+    background-color:grey;
+    opacity: .8;
+}
+
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -32px;
+    margin-top: -32px;
+    display: block;
+}
+
+.progress {
+    width:100%;
+    height:20px;
+    border:1px solid black;
+    margin-bottom: 2px;
+}
+
+.progress-bar{
+    height:20px;
+}
+
+/**
+   upload statuses.
+   **/
+.uploading {
+    background-color: green;
+}
+
+.uploading {
+    background-color: green;
+}
+
+
+.initialized {
+    background-color: black;
+}
+
+.failed {
+    background-color: red;
+}
+
+.canceled {
+    background-color: orange;
+}
+
+.completed {
+    background-color: grey;
+}

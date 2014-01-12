@@ -1,0 +1,35 @@
+application: bmenasha-1
+module: billing-export
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+- url: /loader.gif
+  static_files: loader.gif
+  upload: loader.gif
+- url: /index.html
+  static_files: index.html
+  upload: index.html
+  login: admin
+- url: /
+  static_files: index.html
+  upload: index.html
+  login: admin
+- url: /chart.js
+  static_files: chart.js
+  upload: chart.js
+- url: /billing_export.css
+  static_files: billing_export.css
+  upload: billing_export.css
+- url: /.*
+  login: admin
+  script: main.app
+
+libraries:
+- name: pycrypto
+  version: "latest"

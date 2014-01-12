@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Data</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="billing_export.css">
+  </head>
+  <body class="bs-docs-home" ng-controller="BillingExportController">
+    <div class="loading-container" ng-show="showLoading">
+      <img src="loader.gif" class="loading"/>
+    </div>
+    <div ng-show="initialized">
+      <a class="sr-only" href="#content">Skip to main content</a>
+      <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav"
+	      role="banner">
+        <div class="container">
+	  <div class="navbar-header">
+	    <a href="./" class="navbar-brand"></a>
+	  </div>
+	  <nav class="collapse navbar-collapse bs-navbar-collapse"
+	       role="navigation">
+	    <ul class="nav navbar-nav navbar-right">
+	      <li><a href="mailto:bmenasha@benmenasha.net">{{profile.email}}</a></li>
+	      <li><a href="{{ profile.logoutUrl }}">Sign out</a></li>
+	    </ul>
+	  </nav>
+        </div>
+      </header>
+      <main id="content" role="main">
+        <div class="container">
+	  <div class="well">
+            <h1>Billing Data</h1>
+
+            <select ng-model="product" ng-options="p for p in products" name="product" ng-change="productSelected()"></select>
+
+            <!--Div that will hold the line chart-->
+            <div id="line_chart_div"></div>
+            <div id="tree_chart_div"></div>
+
+            <form method="POST" action="/flushCache"><input type="submit" value="Refresh"></form>
+
+          </div>
+        </div>
+      </main>
+      <footer class="container text-center" role="contentinfo">
+        <a href="https://cloud.google.com/">Google Cloud Platform</a>
+      </footer>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="chart.js"></script>
+  </body>
+</html>

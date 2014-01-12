@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/httplib2
+END
+cacerts.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/httplib2/cacerts.txt
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/httplib2/__init__.py
+END
+socks.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/httplib2/socks.py
+END
+iri2uri.py
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/httplib2/iri2uri.py
+END

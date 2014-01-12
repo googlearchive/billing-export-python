@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client
+END
+keyring_storage.py
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/keyring_storage.py
+END
+gce.py
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/gce.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/__init__.py
+END
+locked_file.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/locked_file.py
+END
+tools.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/tools.py
+END
+crypt.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/crypt.py
+END
+old_run.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/old_run.py
+END
+multistore_file.py
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/multistore_file.py
+END
+appengine.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/appengine.py
+END
+clientsecrets.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/clientsecrets.py
+END
+util.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/util.py
+END
+client.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/client.py
+END
+django_orm.py
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/django_orm.py
+END
+file.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/file.py
+END
+xsrfutil.py
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/xsrfutil.py
+END
+anyjson.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/a/google.com/gcs-file-uploader/!svn/ver/2/trunk/oauth2client/anyjson.py
+END
