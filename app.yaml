@@ -33,3 +33,6 @@ handlers:
 libraries:
 - name: pycrypto
   version: "latest"
+
+builtins:
+- remote_api: on

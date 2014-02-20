@@ -11,7 +11,7 @@
     <div class="loading-container" ng-show="showLoading">
       <img src="loader.gif" class="loading"/>
     </div>
-    <div ng-show="initialized">
+    <div >
       <a class="sr-only" href="#content">Skip to main content</a>
       <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav"
 	      role="banner">
@@ -32,12 +32,24 @@
         <div class="container">
 	  <div class="well">
             <h1>Billing Data</h1>
+            <select ng-model="project" ng-options="p for p in projects" name="project" ng-change="projectSelected()"></select>
 
-            <select ng-model="product" ng-options="p for p in products" name="product" ng-change="productSelected()"></select>
+            <div ng-view></div>
+            <script type="text/ng-template" id="ShowAlerts">
+              <a href="#/AddAlert">Add Alert</a>
+              {{ message }}
+            </script>
+            <script type="text/ng-template" id="AddAlert">
+              <a href="#/">Cancel</a>
+              <form name="AddAlert">
+                Alert Name: <input type="text" name="alert_name"/>
+              </form>
+              {{ message }}
+            </script>
 
             <!--Div that will hold the line chart-->
-            <div id="line_chart_div"></div>
             <div id="tree_chart_div"></div>
+            <div id="line_chart_div"></div>
 
             <form method="POST" action="/flushCache"><input type="submit" value="Refresh"></form>
 
@@ -48,7 +60,8 @@
         <a href="https://cloud.google.com/">Google Cloud Platform</a>
       </footer>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://code.angularjs.org/1.2.8/angular.min.js"></script>
+    <script type="text/javascript" src="http://code.angularjs.org/1.2.8/angular-route.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="chart.js"></script>
   </body>
