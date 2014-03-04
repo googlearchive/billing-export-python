@@ -92,3 +92,7 @@ main {
 .completed {
     background-color: grey;
 }
+.unsubscribe-true {
+    text-decoration: line-through;
+    color: grey;
+}

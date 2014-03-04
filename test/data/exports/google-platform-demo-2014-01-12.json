@@ -1,0 +1,449 @@
+[ {
+  "lineItemId" : "com.google.cloud/services/big-query/Analysis",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/big-query/Analysis",
+    "sum" : "0",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/big-query/Storage",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/big-query/Storage",
+    "sum" : "119624080653014016",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "3.249625",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-sql/DiskSpaceGbV3",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-sql/DiskSpaceGbV3",
+    "sum" : "742170348748800",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.061935",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-sql/IpAddressV3",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-sql/IpAddressV3",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.24",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+    "sum" : "48",
+    "unit" : "requests"
+  } ],
+  "cost" : {
+    "amount" : "0.00048",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+    "sum" : "0",
+    "unit" : "requests"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/StorageDurableReducedRedundancyGbsec",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/StorageDurableReducedRedundancyGbsec",
+    "sum" : "357092170924032",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.007822",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/StorageGbsec",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/StorageGbsec",
+    "sum" : "199283651077210112",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "5.889999",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkGoogleEgressNaNa",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkGoogleEgressNaNa",
+    "sum" : "49447645",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkGoogleIngressNaNa",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkGoogleIngressNaNa",
+    "sum" : "7279065",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressEuApac",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressEuApac",
+    "sum" : "24675",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0.000004",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressEuEu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressEuEu",
+    "sum" : "267942950",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0.029944",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaApac",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaApac",
+    "sum" : "8993541460",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "1.507659",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaEu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaEu",
+    "sum" : "171016182811",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "19.112547",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaNa",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetEgressNaNa",
+    "sum" : "579034141248",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "59.319432",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressEuApac",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressEuApac",
+    "sum" : "17684",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressEuEu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressEuEu",
+    "sum" : "13797496",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaApac",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaApac",
+    "sum" : "619203",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaEu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaEu",
+    "sum" : "1194705535",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaNa",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/NetworkInternetIngressNaNa",
+    "sum" : "735451662",
+    "unit" : "bytes"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/StaticIpCharge",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/StaticIpCharge",
+    "sum" : "259230",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.720083",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/StorageImage",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/StorageImage",
+    "sum" : "1788076306657280",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.052848",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/StoragePdCapacity",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/StoragePdCapacity",
+    "sum" : "707184640372244480",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "9.835977",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/StoragePdSnapshot",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/StoragePdSnapshot",
+    "sum" : "1897343850383360",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0.082467",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_2",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_2",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "5.85504",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_2_Eu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_2_Eu",
+    "sum" : "172800",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "13.19904",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_4",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Highmem_4",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "11.71152",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_1_Eu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_1_Eu",
+    "sum" : "345600",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "10.944",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_2",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_2",
+    "sum" : "259200",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "14.904",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_4",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_4",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "9.95904",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_4_Eu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_4_Eu",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "10.944",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_8_Eu",
+  "startTime" : "2014-01-11T00:00:00-08:00",
+  "endTime" : "2014-01-12T00:00:00-08:00",
+  "projectNumber" : "215053207240",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/compute-engine/VmimageN1Standard_8_Eu",
+    "sum" : "86400",
+    "unit" : "seconds"
+  } ],
+  "cost" : {
+    "amount" : "21.888",
+    "currency" : "USD"
+  }
+} ]

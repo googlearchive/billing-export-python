@@ -1,0 +1,21 @@
+{
+ "kind": "storage#object",
+ "id": "platform-demo-billing-export/google-platform-demo-2014-02-04.json/1393932402214000",
+ "selfLink": "https://www.googleapis.com/storage/v1beta2/b/platform-demo-billing-export/o/google-platform-demo-2014-02-04.json",
+ "name": "google-platform-demo-2014-02-04.json",
+ "bucket": "platform-demo-billing-export",
+ "generation": "1393932402214000",
+ "metageneration": "1",
+ "contentType": "application/json",
+ "updated": "2014-02-04T11:26:42.078Z",
+ "timeDeleted": "2014-02-04T15:38:33.413Z",
+ "size": "3",
+ "md5Hash": "+pSX9azMr8w+YBlle9xesQ==",
+ "mediaLink": "https://www.googleapis.com/storage/v1beta2/b/platform-demo-billing-export/o/google-platform-demo-2014-02-04.json?generation=1393932402214000&alt=media",
+ "owner": {
+  "entity": "user-00b4903a9703b365e9dfd610758eb08b857edbd47b3eb404440b5862e716e6b6",
+  "entityId": "00b4903a9703b365e9dfd610758eb08b857edbd47b3eb404440b5862e716e6b6"
+ },
+ "crc32c": "lFrVnQ==",
+ "etag": "CPCIs+3i+LwCEAE="
+}

@@ -1,0 +1,57 @@
+[ {
+  "lineItemId" : "com.google.cloud/services/big-query/Storage",
+  "startTime" : "2014-01-26T00:00:00-08:00",
+  "endTime" : "2014-01-27T00:00:00-08:00",
+  "projectNumber" : "544906558578",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/big-query/Storage",
+    "sum" : "8739704832",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+  "startTime" : "2014-01-26T00:00:00-08:00",
+  "endTime" : "2014-01-27T00:00:00-08:00",
+  "projectNumber" : "544906558578",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassARequest",
+    "sum" : "0",
+    "unit" : "requests"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+  "startTime" : "2014-01-26T00:00:00-08:00",
+  "endTime" : "2014-01-27T00:00:00-08:00",
+  "projectNumber" : "544906558578",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/ClassBRequest",
+    "sum" : "0",
+    "unit" : "requests"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+}, {
+  "lineItemId" : "com.google.cloud/services/cloud-storage/StorageGbsec",
+  "startTime" : "2014-01-26T00:00:00-08:00",
+  "endTime" : "2014-01-27T00:00:00-08:00",
+  "projectNumber" : "544906558578",
+  "measurements" : [ {
+    "measurementId" : "com.google.cloud/services/cloud-storage/StorageGbsec",
+    "sum" : "32212254720",
+    "unit" : "byte-seconds"
+  } ],
+  "cost" : {
+    "amount" : "0",
+    "currency" : "USD"
+  }
+} ]

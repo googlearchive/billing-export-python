@@ -32,27 +32,86 @@
         <div class="container">
 	  <div class="well">
             <h1>Billing Data</h1>
-            <select ng-model="project" ng-options="p for p in projects" name="project" ng-change="projectSelected()"></select>
+            <select ng-change="projectSelected()" ng-model="project" ng-options="p for p in projects" name="project"></select>
 
             <div ng-view></div>
+
+            <!-- ShowAlerts Template -->
             <script type="text/ng-template" id="ShowAlerts">
-              <a href="#/AddAlert">Add Alert</a>
-              {{ message }}
+              <br/><u>Alerts</u>
+              <div ng-repeat="alert in alerts">
+                <b>{{ alert.name }} </b>
+                when
+                <i>{{alert.target_value}}</i>
+                  <span ng-show="alert.trigger == 'TOTAL_AMOUNT'">is greater then</span>
+                  <span ng-show="alert.trigger == 'RELATIVE_CHANGE'">percent change</span>
+                  <span ng-show="alert.trigger == 'TOTAL_CHANGE'">amount change</span>
+                <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">$</span> {{alert.trigger_value}} <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">.00</span><span ng-show="alert.trigger == 'RELATIVE_CHANGE'">%</span>
+                <span ng-show="alert.trigger != 'TOTAL_AMOUNT'">
+                from one
+                  <span ng-show="alert.range == 'ONE_DAY'">day</span>
+                  <span ng-show="alert.range == 'ONE_WEEK'">week</span>
+                  <span ng-show="alert.range == 'ONE_YEAR'">year</span>
+                ago
+                </span>
+                <a href="#/EditAlert/{{project}}/{{alert.key}}">edit</a>
+              </div>
+              <a href="#/AddAlert/{{project}}">Add Alert</a>
+              <br/>
+
+              <a href="#/EditEmail/{{project}}">Email Subscriptions</a>
             </script>
-            <script type="text/ng-template" id="AddAlert">
-              <a href="#/">Cancel</a>
-              <form name="AddAlert">
-                Alert Name: <input type="text" name="alert_name"/>
+
+            <!-- AlertDetail Template. -->
+            <script type="text/ng-template" id="AlertDetail">
+              <form name="AlertDetail">
+                Name: <input type="text" name="alert_name" ng-model="alert.name">
+                When <select ng-init="alert.target_value = 'Total'" ng-model="alert.target_value" ng-options="s for s in skus"></select>
+                <select ng-init="alert.trigger = 'TOTAL_AMOUNT'" ng-model="alert.trigger">
+                  <option value="TOTAL_AMOUNT">Is Greater Then</option>
+                  <option value="RELATIVE_CHANGE">Percent Change</option>
+                  <option value="TOTAL_CHANGE">Amount Change</option>
+                </select>
+                <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">$</span> <input type="number" name="alert_trigger_value" ng-model="alert.trigger_value"><span ng-show="alert.trigger != 'RELATIVE_CHANGE'">.00</span><span ng-show="alert.trigger == 'RELATIVE_CHANGE'">%</span>
+                <span ng-show="alert.trigger != 'TOTAL_AMOUNT'">
+                From one:
+                <select ng-init="alert.range = 'ONE_DAY'" ng-model="alert.range">
+                  <option value="ONE_DAY">day</option>
+                  <option value="ONE_WEEK">week</option>
+                  <option value="ONE_YEAR">year</option>
+                </select> Ago
+                </span>
+                <br/><input type="submit" value="Save" ng-click="save(alert)"><input type="submit" value="Delete" ng-show="alert.key" ng-click="delete(alert)"><a href="#/Project/{{project}}">Cancel</a>
               </form>
               {{ message }}
             </script>
 
+
+            <!-- EmailDetail Template. -->
+            <script type="text/ng-template" id="EmailDetail">
+              <form name="EmailDetail">
+                  Email: <input type="email" name="email" ng-model="subscriptionEmail"> <input type="button" value="Add" ng-click="addEmail()">
+                  Daily Summary?: <input type="checkbox" name="dailySummaries" ng-model="subscription.dailySummary">
+                  <div>
+                    <ul>
+                      <li ng-repeat="email in subscription.emails">
+                        <input type="checkbox" ng-model="email.unsubscribe"> <span class="unsubscribe-{{email.unsubscribe}}">{{email.email}}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <br/><input type="submit" value="Save" ng-click="save(subscription)"><a href="#/Project/{{project}}">Cancel</a>
+                </form>
+            </script>
+
             <!--Div that will hold the line chart-->
             <div id="tree_chart_div"></div>
+            <hr/>
             <div id="line_chart_div"></div>
 
-            <form method="POST" action="/flushCache"><input type="submit" value="Refresh"></form>
 
+<!--
+            <form method="POST" action="/flushCache"><input type="submit" value="Flush All Caches"></form>
+-->
           </div>
         </div>
       </main>

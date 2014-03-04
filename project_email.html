@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Billing Export Report For {{project}}</title>
+  </head>
+  <body>
+
+    <h1>Billing Export Report for <a href="{{project_url}}">{{project}}</a></h1>
+
+    <h4> Don't want to receive this email? Unsubscribe <a href="{{ unsubscribe_url }}">here</a></h4>
+
+    {% if triggered_alerts %}
+    <h2> Warning: These Alerts have Triggered!</h2>
+    <div class="alert-list">
+      <ul>
+        {% for alert in triggered_alerts %}
+        <li><a href="{{alert_url}}/{{alert.key.id()}}">{{ alert.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr/>
+    {% endif %}
+    <h2>Current Billing Data:</h2>
+
+    <div class="billing-data">
+      <table>
+        <tr>
+          <th>Sku</th>
+          <th>Amount</th>
+        </tr>
+        {% for column in current_data.columns %}
+        <tr>
+          <td>{{column}}</td>
+          <td>{{"$%.2f"|format(current_data.rows[0][loop.index])}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    - The Billing Export Reporter
+  </body>
+</html>

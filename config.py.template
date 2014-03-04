@@ -1,0 +1,15 @@
+"""Configuration file.
+
+Copy to config.py after filling in values.
+"""
+
+# runtime configurations
+bucket  = <bucketname>
+default_to_email = <email_to_receive_notifications_when_none_configured>
+
+# configurations only used for local developement.
+# similar to 'ABC123@developer.gserviceaccount.com'
+service_account = <service-account>
+
+# private key file in local filesystem like 'ABC123-privatekey.pem'
+private_key_pem_file =  <private_key_pem_file>

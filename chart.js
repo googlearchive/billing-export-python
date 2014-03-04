@@ -5,7 +5,6 @@ var treeChart;
 var filteredColumns = [];
 var series = {};
 
-
 var options = {
   series: series,
   title: 'Charges',
@@ -28,31 +27,128 @@ function drawChart() {
   angular.bootstrap(document.body,['BillingExport']);
 }
 
-
 var app = angular.module('BillingExport', ['ngRoute']);
+app.factory('globalData',function($rootScope){
+  return {
+    broadcastProjectChange: function(msg) {
+      $rootScope.$broadcast('handleProjectChange', msg);
+    },
+    broadcastAlertChange: function(msg) {
+      console.log('broadcasting alertChange');
+      $rootScope.$broadcast('handleAlertChange', msg);
+    }
+  };
+});
+
 app.config(
   function($routeProvider){
-    $routeProvider.when('/',
+    $routeProvider.when('/Project/:project',
                         {templateUrl:'ShowAlerts',
                          controller: 'ShowAlerts'});
-    $routeProvider.when('/AddAlert',
-                        {templateUrl:'AddAlert',
+    $routeProvider.when('/AddAlert/:project',
+                        {templateUrl:'AlertDetail',
                          controller: 'AddAlert'});
+    $routeProvider.when('/EditAlert/:project/:key',
+                        {templateUrl:'AlertDetail',
+                         controller: 'EditAlert'});
+    $routeProvider.when('/EditEmail/:project',
+                        {templateUrl:'EmailDetail',
+                         controller: 'EditEmail'});
+
   });
 
 
-app.controller('AddAlert', function ($scope,$http){
+app.controller('AddAlert', function ($scope,$http,$location,$timeout,$routeParams,globalData){
   $scope.message = "Add An Alert!";
+  $scope.alert={project:globalData.project};
+  $scope.$on('handleProjectChange', function(event, message) {
+    console.log('setting alert project to ' + globalData.project);
+    $scope.alert.project = globalData.project;
+  });
+  $scope.save = function(alert){
+    $http.post('/addAlert',alert)
+      .success(function(data) {
+        globalData.broadcastAlertChange();
+        $location.path('/Project/' + $scope.project);
+      });
+  };
 });
-
-app.controller('ShowAlerts', function ($scope,$http){
-  $scope.message = "Here are your alerts!";
+app.controller('EditAlert', function ($scope,$http,$location,$routeParams,$timeout,globalData){
+  $http.post('/getAlert',{key:parseInt($routeParams.key)}).
+    success(function(data){
+      $scope.alert = data;
+  });
+  $scope.save = function(alert){
+    $http.post('/editAlert', $scope.alert)
+      .success(function(data) {
+        $timeout(function() { $location.path('/Project/' + $scope.project ); });
+      });
+  };
+  $scope.delete = function(alert){
+    $http.post('/deleteAlert', $scope.alert)
+      .success(function(data) {
+        $timeout(function() { $location.path('/Project/' + $scope.project); });
+      });
+  };
 });
-
-
-
-app.controller('BillingExportController', function ($scope,$http){
+app.controller('ShowAlerts', function ($scope,$http,globalData){
+  $scope.alerts = globalData.alerts;
+  function getAlertList(){
+    $http.post('/getAlertList',{project:$scope.project})
+      .success(function(data){
+        globalData.alerts = data;
+        $scope.alerts = data;
+      });
+  };
+  $scope.$on('handleAlertChange', function(event, message) {
+    console.log('alertchange');
+    getAlertList();
+  });
+  $scope.$on('handleProjectChange', function(event, message) {
+    console.log('projecthange');
+    getAlertList();
+  });
+  getAlertList();
+});
+app.controller('EditEmail', function ($scope,$http,$location,$routeParams,$timeout,globalData){
+  $http.post('/getSubscription',{project:$routeParams.project}).
+    success(function(data){
+      // translate server subscription object into UI subscription obj.
+      var emails = data.emails.map(function(email){
+        return {'email': email,
+                'unsubscribe': false};
+      });
+      $scope.subscription = {'emails':emails,
+                             'project':$scope.project};
+  });
+  $scope.addEmail = function(){
+    $scope.subscription.emails.push({email:$scope.subscriptionEmail,unsubscribe:false});
+  };
+  $scope.save = function(subscription){
+    // translate the UI subscription object into the format server expects
+    var obj_subscription = {'project':$scope.subscription.project,
+                            'daily_summary':$scope.subscription.dailySummary};
+    obj_subscription.emails = $scope.subscription.emails.map(function(email){
+      if(!email.unsubscribe){
+        return email.email;
+      }
+      return false;
+    });
+    obj_subscription.emails = obj_subscription.emails.filter(function(obj){
+      return obj;
+    });
+    console.log(obj_subscription);
+    console.log(obj_subscription.emails);
+    $http.post('/editSubscription', obj_subscription)
+      .success(function(data) {
+        $timeout(function() { $location.path('/Project/' + $scope.project); });
+      });
+  };
+});
+app.controller('BillingExportController', function ($scope,$http,$location,$routeParams,$timeout,globalData){
   console.log("billingexportcontrollerinit");
+
+  $scope.skus=[];
 
   $scope.showLoading=true;
   function showLoading(show){
@@ -110,10 +206,18 @@ app.controller('BillingExportController', function ($scope,$http){
 
   $scope.projectSelected = function(){
     console.log('projectselected!');
+    // notify others that the project changed
+    globalData.project = $scope.project;
+    globalData.broadcastProjectChange();
+    showLoading(true);
     var query = new google.visualization.Query('/chart?project=' + $scope.project);
     query.send(function(response){
       console.log('callback!');
       handleQueryResponse(response);
+      if($routeParams.project != $scope.project){
+        $location.path('/Project/' + $scope.project);
+      }
+      $scope.$apply();
     });
   };
 
@@ -122,7 +226,14 @@ app.controller('BillingExportController', function ($scope,$http){
   $http.get('/projectList').success(function(data){
     console.log("projectlistsuscess");
     $scope.projects = data;
-    $scope.project = $scope.projects[5];
+    routeProject = $routeParams.project
+    // the project in the url is valid, use it.
+    console.log('$routeParams.project=' + $routeParams.project);
+    if($scope.projects.indexOf($routeParams.project) != -1){
+      $scope.project = $routeParams.project;
+    }else{
+      $scope.project = $scope.projects[0];
+    }
     $scope.projectSelected();
   });
 
@@ -130,7 +241,6 @@ app.controller('BillingExportController', function ($scope,$http){
   function handleQueryResponse(response){
     console.log('handleQueryResponse!');
     showLoading(false);
-    $scope.$apply();
     data = response.getDataTable();
     if(typeof data == 'undefined' || data == null){
       console.log('null?!');
@@ -182,15 +292,26 @@ app.controller('BillingExportController', function ($scope,$http){
       // translate the existing data format into a nested tree structure.
       // node, parent, value, color
       // first get all the root nodes, with total values
-      // oh, wait!
-      // skip first row (time)
+      // oh, wait! skip first row (time)
+
+      var allproducts = {}
+      var allskus = {}
       for(var col=1;col < data.getNumberOfColumns();col++){
         var columnId = data.getColumnId(col);
         var sku = columnId.substr(columnId.indexOf('/')+1,columnId.length);
         var product = columnId.substr(0,columnId.indexOf('/'));
         var cell = data.getValue(rowIndex,col);
         treeDataTable.rows.push({c:[{v:sku},{v:product},{v:cell}]});
+        if(!(product in allproducts)){
+          allproducts[product] = {}
+        }
+        allskus[columnId] = true;
+        allproducts[product][sku] = true;
       }
+
+      $scope.skus = Object.keys(allskus).sort();
+      $scope.skus.unshift('Total');
+
 
       // add top level root product
       treeDataTable.rows.push({c:[{v:'Cloud'},null,0]});
@@ -199,6 +320,7 @@ app.controller('BillingExportController', function ($scope,$http){
       if(previousSelection.length > 0){
         treeChart.setSelection(previousSelection);
       }
+      $scope.$apply();
     }
 
     function drawLineChart(){

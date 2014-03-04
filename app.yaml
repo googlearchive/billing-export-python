@@ -26,12 +26,16 @@ handlers:
 - url: /billing_export.css
   static_files: billing_export.css
   upload: billing_export.css
+- url: /objectChangeNofication
+  script: main.app
 - url: /.*
   login: admin
   script: main.app
 
 libraries:
 - name: pycrypto
+  version: "latest"
+- name: jinja2
   version: "latest"
 
 builtins:
