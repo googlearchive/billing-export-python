@@ -567,11 +567,17 @@ class ObjectChangeNotification(webapp2.RequestHandler):
     obj_notification = json.loads(self.request.body)
     project_name, object_date = MatchProjectDate(obj_notification['name'])
 
+    if not project_name or not object_date:
+      logging.info('unable to parse project or date from ' +
+                   obj_notification['name'])
+      return
+
     # Ensure we don't send multiple emails for the same project if we get
     # multiple project object notifications in the same day.
     if not ProcessedNotifications.processForToday(project_name):
       logging.debug('Duplicate notification received for ' + str(project_name))
       self.response.write('Duplicate notification')
+      return
 
     alerts = Alert.forProject(project_name)
 
