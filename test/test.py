@@ -1,12 +1,14 @@
-import logging
 from datetime import date
+import json
+import logging
 import os
 import unittest
-import webapp2
-import webtest
-import json
+
 import cloudstorage as gcs
 import main
+import webapp2
+import webtest
+
 from google.appengine.ext import testbed
 
 
@@ -34,11 +36,20 @@ class TestParseData(unittest.TestCase):
                                     main.ObjectChangeNotification)])
     self.testapp = webtest.TestApp(app)
 
+  def testTotalRelativeDifferenceAlert(self):
+    compute_engine_alert = main.Alert()
+    compute_engine_alert.range = main.AlertRange.ONE_DAY
+    compute_engine_alert.trigger = main.AlertTrigger.RELATIVE_CHANGE
+    compute_engine_alert.target_value = 'Total'
+    compute_engine_alert.trigger_value = 1.1
+    v = compute_engine_alert.isAlertTriggered('google-platform-demo',
+                                              date(2014, 02, 01))
+    assert v
+
   def testSKURelativeDifferenceAlert(self):
     compute_engine_alert = main.Alert()
     compute_engine_alert.range = main.AlertRange.ONE_WEEK
     compute_engine_alert.trigger = main.AlertTrigger.RELATIVE_CHANGE
-    compute_engine_alert.target = main.AlertTarget.SKU
     compute_engine_alert.target_value = 'Cloud/compute-engine'
     compute_engine_alert.trigger_value = 300
     v = compute_engine_alert.isAlertTriggered('google-platform-demo',
@@ -49,7 +60,6 @@ class TestParseData(unittest.TestCase):
     compute_engine_alert = main.Alert()
     compute_engine_alert.range = main.AlertRange.ONE_WEEK
     compute_engine_alert.trigger = main.AlertTrigger.RELATIVE_CHANGE
-    compute_engine_alert.target = main.AlertTarget.SKU
     compute_engine_alert.target_value = 'Cloud/compute-engine'
     compute_engine_alert.trigger_value = 400
     v = compute_engine_alert.isAlertTriggered('google-platform-demo',
@@ -60,7 +70,6 @@ class TestParseData(unittest.TestCase):
     compute_engine_alert = main.Alert()
     compute_engine_alert.range = main.AlertRange.ONE_WEEK
     compute_engine_alert.trigger = main.AlertTrigger.RELATIVE_CHANGE
-    compute_engine_alert.target = main.AlertTarget.SKU
     compute_engine_alert.target_value = 'Cloud/compute-engine'
     compute_engine_alert.trigger_value = -300
     v = compute_engine_alert.isAlertTriggered('google-platform-demo',
@@ -71,7 +80,7 @@ class TestParseData(unittest.TestCase):
     # data_table = main.GetAllBillingDataTable('google-platform-demo')
     compute_engine_alert = main.Alert()
     compute_engine_alert.range = main.AlertRange.ONE_DAY
-    compute_engine_alert.target = main.AlertTarget.TOTAL
+    compute_engine_alert.target_value = 'Total'
     compute_engine_alert.trigger = main.AlertTrigger.TOTAL_CHANGE
     compute_engine_alert.trigger_value = 10.00
     v = compute_engine_alert.isAlertTriggered('google-platform-demo',
@@ -111,7 +120,7 @@ class TestParseData(unittest.TestCase):
     compute_engine_alert = main.Alert(parent=main.Alert.entity_group)
     compute_engine_alert.name = 'Test Compute Engine Alert Alert'
     compute_engine_alert.range = main.AlertRange.ONE_DAY
-    compute_engine_alert.target = main.AlertTarget.TOTAL
+    compute_engine_alert.target_value = 'Total'
     compute_engine_alert.trigger = main.AlertTrigger.TOTAL_CHANGE
     compute_engine_alert.trigger_value = 10.00
     compute_engine_alert.project = project_date[0]

@@ -15,6 +15,7 @@ from datetime import timedelta
 import json
 import logging
 import re
+import sys
 import jinja2
 from protorpc import messages
 import webapp2
@@ -85,12 +86,6 @@ class AlertTrigger(messages.Enum):
   TOTAL_AMOUNT = 2
 
 
-class AlertTarget(messages.Enum):
-  """What value is being compared."""
-  TOTAL = 0
-  SKU = 1
-
-
 class AlertRange(messages.Enum):
   """Compared to previous time."""
   ONE_DAY = 1
@@ -106,7 +101,6 @@ class Alert(ndb.Model):
   range = msgprop.EnumProperty(AlertRange)
   trigger = msgprop.EnumProperty(AlertTrigger)
   trigger_value = ndb.FloatProperty()  # dollar amount or percentage
-  target = msgprop.EnumProperty(AlertTarget)
   target_value = ndb.StringProperty()  # product/sku or null if target is TOTAL
   # put everything into one entity group.
   entity_group = ndb.Key('AlertEntityGroup', 1)
@@ -120,12 +114,13 @@ class Alert(ndb.Model):
 
     # billing data for the current date.
     current_dtd = GetDataTableData(project, current_date)
-    logging.debug('\ncurrent_dtd.rows=' + repr(current_dtd.rows) +
-                  '\ncurrent_dtd.columns=' + repr(current_dtd.columns))
     current_target_value = current_dtd.GetTargetAmount(self.target_value)
-    resulting_target_value = current_target_value
+    logging.debug('\ncurrent_dtd.rows=' + repr(current_dtd.rows) +
+                  '\ncurrent_dtd.columns=' + repr(current_dtd.columns) +
+                  '\ncurrent_target_value=' + repr(current_target_value))
     # if the alert trigger is based on a past billing data,
     # lookup the past billing data.
+    resulting_target_value = current_target_value
     if self.trigger != AlertTrigger.TOTAL_AMOUNT:
       elapsed_range = timedelta(-self.range.number)
       past_date = current_date + elapsed_range
@@ -135,12 +130,15 @@ class Alert(ndb.Model):
       if self.trigger == AlertTrigger.TOTAL_CHANGE:
         resulting_target_value = current_target_value - past_target_value
       else:  # must be RELATIVE_CHANGE
-        resulting_target_value = ((current_target_value - past_target_value) /
-                                  past_target_value) * 100
+        if past_target_value == 0:
+          resulting_target_value = sys.float_info.max
+        else:
+          resulting_target_value = ((current_target_value - past_target_value) /
+                                    past_target_value) * 100
       logging.debug('calculating relative_change or total_change alert :\n' +
                     repr(self) +
                     '\ncurrent_target_value=' + str(current_target_value) +
-                    '\npast_target_value' + str(past_target_value) +
+                    '\npast_target_value=' + str(past_target_value) +
                     '\npast_dtd.rows=' + repr(past_dtd.rows) +
                     '\npast_dtd.columns=' + repr(past_dtd.columns))
     is_triggered = False
@@ -152,7 +150,7 @@ class Alert(ndb.Model):
     else:
       if resulting_target_value > self.trigger_value:
         is_triggered = True
-    logging.debug('Evaluating alert ' + repr(self) + ' target_value='
+    logging.debug('Evaluating alert ' + repr(self) + ' resulting_target_value='
                   + repr(resulting_target_value) + ' and is_triggered=' +
                   str(is_triggered))
     return is_triggered
@@ -254,9 +252,7 @@ class DataTableData(object):
     target_amount = 0
     for row in self.rows:
       for index, cell in enumerate(row[1:]):
-        if ((target is None and
-             (not self.columns[index].startswith('Cloud/'))) or
-             target == self.columns[index]):
+        if ((target is 'Total' and (not self.columns[index].startswith('Cloud/'))) or target == self.columns[index]):
           target_amount += cell
     return target_amount
 
@@ -391,8 +387,6 @@ def DeserializeAlert(json_string):
     alert_obj['range'] = AlertRange(alert_obj['range'])
   if 'trigger' in alert_obj and alert_obj['trigger'] is not None:
     alert_obj['trigger'] = AlertTrigger(alert_obj['trigger'])
-  if 'target' in alert_obj and alert_obj['target'] is not None:
-    alert_obj['target'] = AlertTarget(alert_obj['target'])
   return alert_obj
 
 
@@ -576,7 +570,7 @@ class ObjectChangeNotification(webapp2.RequestHandler):
     # Ensure we don't send multiple emails for the same project if we get
     # multiple project object notifications in the same day.
     if not ProcessedNotifications.processForToday(project_name):
-      logging.debug('Duplicate notification received for ' + project_name)
+      logging.debug('Duplicate notification received for ' + str(project_name))
       self.response.write('Duplicate notification')
 
     alerts = Alert.forProject(project_name)
