@@ -1,11 +1,14 @@
-"""View billing export information.
+"""View billing export data.
 
 An app engine application for parsing, displaing and triggering alerts from
 cloud platform billing export data.
 
+For more information on billing export see
+
+https://support.google.com/cloud/answer/4524336?hl=en
+
 """
 
-import config
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -17,6 +20,7 @@ from protorpc import messages
 import webapp2
 import cloudstorage as gcs
 from cloudstorage import common as gcs_common
+import config
 import gviz_api
 import httplib2
 from google.appengine.api import app_identity
@@ -27,14 +31,13 @@ from google.appengine.ext.ndb import msgprop
 
 
 def UseLocalGCS():
-  """Use the local GCS stub."""
+  """Use the local GCS stub, great for testing locally.."""
   gcs_common.set_access_token(None)
 
 
 def UseRemoteGCS():
   """Use remote GCS via a signed certificate."""
-  print 'using remote gcs'
-
+  logging.debug('using remote gcs')
   from oauth2client.client import SignedJwtAssertionCredentials
   http_object = httplib2.Http(timeout=60)
   service_account = config.service_account
@@ -45,42 +48,51 @@ def UseRemoteGCS():
                                               private_key,
                                               scope)
   certificate.refresh(http_object)
-  print 'using remote gcs'
   gcs_common.set_access_token(certificate.access_token)
 
 
-# do convolutions to speak to remote cloud storage even when on a local
-# devserver.
-if gcs_common.local_run():
-  UseRemoteGCS()
+# Do convolutions to speak to remote cloud storage even when on a local
+# devserver. If you want to communicate to remote GCS, rather then use local
+# GCS stubs, uncomment this. It requires setting: config.service_account and
+# config.private_key_pem_file from a project service account.
+#
+# if gcs_common.local_run():
+#   UseRemoteGCS()
+#
 
+# Bucket containing billing export data.
 BUCKET = config.bucket
+# Email template.
 TEMPLATE_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader('.'),
                                   autoescape=True)
 EMAIL_TEMPLATE = TEMPLATE_ENV.get_template('project_email.html')
 
 
-# cache chart data
 class ChartData(ndb.Model):
+  """Cache the resulting TableData object parsed from the json files."""
   data_table = ndb.PickleProperty()
 
 
 class Projects(ndb.Model):
+  """Cache a list of all project exports in the bucket."""
   projects = ndb.PickleProperty()
 
 
 class AlertTrigger(messages.Enum):
+  """What condition the alert will trigger under."""
   RELATIVE_CHANGE = 0
   TOTAL_CHANGE = 1
   TOTAL_AMOUNT = 2
 
 
 class AlertTarget(messages.Enum):
+  """What value is being compared."""
   TOTAL = 0
   SKU = 1
 
 
 class AlertRange(messages.Enum):
+  """Compared to previous time."""
   ONE_DAY = 1
   ONE_WEEK = 7
   ONE_MONTH = 30
@@ -102,20 +114,24 @@ class Alert(ndb.Model):
   def isAlertTriggered(self, project, current_date):
     """Return true if an alert should trigger."""
 
-    # see if the project matches.
+    # See if the project matches.
     if self.project is not None and self.project != project:
       return False
 
+    # billing data for the current date.
     current_dtd = GetDataTableData(project, current_date)
     logging.debug('\ncurrent_dtd.rows=' + repr(current_dtd.rows) +
                   '\ncurrent_dtd.columns=' + repr(current_dtd.columns))
     current_target_value = current_dtd.GetTargetAmount(self.target_value)
     resulting_target_value = current_target_value
+    # if the alert trigger is based on a past billing data,
+    # lookup the past billing data.
     if self.trigger != AlertTrigger.TOTAL_AMOUNT:
       elapsed_range = timedelta(-self.range.number)
       past_date = current_date + elapsed_range
       past_dtd = GetDataTableData(project, past_date)
       past_target_value = past_dtd.GetTargetAmount(self.target_value)
+      # calculate the difference between the past and current billing data.
       if self.trigger == AlertTrigger.TOTAL_CHANGE:
         resulting_target_value = current_target_value - past_target_value
       else:  # must be RELATIVE_CHANGE
@@ -128,6 +144,8 @@ class Alert(ndb.Model):
                     '\npast_dtd.rows=' + repr(past_dtd.rows) +
                     '\npast_dtd.columns=' + repr(past_dtd.columns))
     is_triggered = False
+
+    # is the difference/total over the alert's threshold?
     if self.trigger_value < 0:
       if resulting_target_value < self.trigger_value:
         is_triggered = True
@@ -149,6 +167,7 @@ class Alert(ndb.Model):
     return alerts
 
   def to_dict(self):
+    """Easier json serialization."""
     value = super(Alert, self).to_dict()
     if self.key is not None:
       value['key'] = self.key.id()
@@ -161,11 +180,20 @@ def EnumPropertyHandler(obj):
 
 
 def GetCanonicalLineItem(line_item):
+  """Simplify product and sku names."""
   return line_item.replace('com.google.cloud/services/', '')
 
 
 def AddCloudProductSums(line_items, date_hash):
-  """Synthesize product specific columns."""
+  """Synthesize product specific totals in supplied line_items and date_hash.
+
+  Args:
+    line_items: a list of sku names that were charged to the project.
+    date_hash: a map of date objects to a list of charges for each line_item.
+  Returns:
+    Will add new 'Cloud/<product> elements to the supplied line_items list,
+    and product total to the date_hash values returns nothing.
+  """
   line_item_product = [li.split('/')[0] for li in line_items]
   for _, row in date_hash.iteritems():
     product_totals = {li.split('/')[0]: 0 for li in line_items}
@@ -193,7 +221,7 @@ def GetBillingProjects():
   """return a list of all projects we have billing export informaiton for."""
   projects = Projects.get_by_id('Projects')
   if projects is not None:
-    print 'using cached projects'
+    logging.debug('using cached projects')
     return projects.projects
   project_list = []
   current_project = None
@@ -208,7 +236,6 @@ def GetBillingProjects():
       current_project = project_name
   projects = Projects(id='Projects')
   projects.projects = project_list
-  print repr(project_list)
   projects.put()
   return project_list
 
@@ -235,7 +262,15 @@ class DataTableData(object):
 
 
 def GetDataTableData(project_name, table_date=None):
-  """Read json files from cloud storage for project and an optional date."""
+  """Read json files from cloud storage for project and an optional date.
+
+  Args:
+    project_name: name of the project to get data for.
+    table_date: date object for when to get the data. When  None
+    last 90 days of data is parsed.
+  Returns:
+    A DataTableData object of all the parsed data with product totals.
+  """
   line_items = []
   date_hash = dict()
   object_prefix = BUCKET + '/' + project_name
@@ -267,6 +302,7 @@ def GetDataTableData(project_name, table_date=None):
       row[coli] = float(item['cost']['amount'])
     billing_file.close()
 
+  # Add product totals to the parsed sku amounts.
   AddCloudProductSums(line_items, date_hash)
   data_table_data = [[bill_date] + row for bill_date, row in
                      date_hash.iteritems()]
@@ -274,7 +310,14 @@ def GetDataTableData(project_name, table_date=None):
 
 
 def GetAllBillingDataTable(project_name):
-  """Return billing table data."""
+  """Returns gviz_api.DataTable containing last 90 days of data.
+  Will try to use datastore/memcached data if available.
+
+  Args:
+    project_name: string name of the project
+  Returns:
+    A gviz_api.DataTable instance.
+  """
   # first example datastore cache.
   cached_data_table = ChartData.get_by_id(project_name)
   if cached_data_table is not None:
@@ -297,8 +340,14 @@ def GetAllBillingDataTable(project_name):
 
 
 class GetChartData(webapp2.RequestHandler):
+  """Returns json parsable by Google Visualization javascript library."""
+
   def get(self):
-    """Render chart."""
+    """Calls GetAllBillingDataTable.
+
+    Returns: response in a format acceptible to google javascript visualization
+    library.
+    """
     data_table = GetAllBillingDataTable(self.request.get('project'))
     tqx = self.request.get('tqx')
     req_id = int(tqx[tqx.find('reqId'):].split(':')[1])
@@ -309,6 +358,7 @@ class GetChartData(webapp2.RequestHandler):
 
 
 def FlushAllCaches():
+  """Removes any cached data from datastore/memache."""
   chart_data_keys = ChartData.query().fetch(keys_only=True)
   ndb.delete_multi(chart_data_keys)
   project_list_keys = Projects.query().fetch(keys_only=True)
@@ -316,6 +366,8 @@ def FlushAllCaches():
 
 
 class FlushCache(webapp2.RequestHandler):
+  """Handler to invoke FlushAllCaches."""
+
   def post(self):
     """Clear Datastore cache."""
     FlushAllCaches()
@@ -445,7 +497,8 @@ def SendEmail(context, recipients):
   emailbody = EMAIL_TEMPLATE.render(context)
 
   if not recipients:
-    logging.info('WARNING: no recipients for email, using service account.')
+    logging.info('no recipients for email, using configured default: ' +
+                 config.default_to_email)
     recipients = [config.default_to_email]
   mail.send_mail(sender=app_identity.get_service_account_name(),
                  subject='Billing Summary For ' + context['project'],
@@ -461,6 +514,7 @@ class ProcessedNotifications(ndb.Model):
 
   @classmethod
   def getInstance(cls):
+    """Returns the single instance of this entity."""
     instance_key = ndb.Key(ProcessedNotifications, 'ProcessedNotifications')
     instance = instance_key.get()
     if instance is None:
@@ -498,19 +552,16 @@ class ProcessedNotifications(ndb.Model):
 class ObjectChangeNotification(webapp2.RequestHandler):
   """Process notification events."""
 
+  # get hostname from current request_url.
   host_name_re = re.compile('(.*)/')
-
-  def get(self):
-    logging.info('Get request to notification page.')
-    self.response.write('Welcome to the notification app.')
 
   def post(self):  # pylint: disable-msg=C6409
     """Process the notification event.
 
-    This method is invoked when the notification channel is first created with
-    a sync event, and then subsequently every time an object is added to the
-    bucket, updated (both content and metadata) or removed. It records the
-    notification message in the log.
+    Invoked when the notification channel is first created with a sync event,
+    and then subsequently every time an object is added to the bucket, updated
+    (both content and metadata) or removed. It records the notification message
+    in the log.
     """
 
     logging.debug(
@@ -518,20 +569,19 @@ class ObjectChangeNotification(webapp2.RequestHandler):
         '\n'.join(['%s: %s' % x for x in self.request.headers.iteritems()]),
         self.request.body)
 
-    # create a lock in the event we get multiple requests for this object.
-    # create an entity with a key of this property.
-
     # Query for this project's alerts
     obj_notification = json.loads(self.request.body)
     project_name, object_date = MatchProjectDate(obj_notification['name'])
 
+    # Ensure we don't send multiple emails for the same project if we get
+    # multiple project object notifications in the same day.
     if not ProcessedNotifications.processForToday(project_name):
       logging.debug('Duplicate notification received for ' + project_name)
       self.response.write('Duplicate notification')
 
     alerts = Alert.forProject(project_name)
 
-    # check if any trigger.
+    # check if any alerts trigger.
     triggered_alerts = [alert for alert in alerts if
                         alert.isAlertTriggered(project_name, object_date)]
 
@@ -545,21 +595,17 @@ class ObjectChangeNotification(webapp2.RequestHandler):
     if len(triggered_alerts) or subscription.daily_summary:
       # built the data used by the email template
       host_url = self.host_name_re.match(self.request.url).group(1)
-
       context = {'project': project_name,
                  'project_url': host_url + '#/Project/' + project_name,
                  'unsubscribe_url': host_url + '#/EditEmail/' + project_name,
                  'alert_url': host_url + '#/EditAlert/' + project_name + '/',
                  'triggered_alerts': triggered_alerts,
                  'current_data': current_dtd}
+
+      # actually send the email.
       SendEmail(context, subscription.emails)
-    logging.debug(self.request.url)
 
-    # is the daily summary enabled? if so, send an email out to subscribers
-    # with the daily summary and triggered alert. otherwise, send an email to
-    # subscribed members only if an alert triggers
-
-    # could be more effecient here.
+    # Clear caches so project data is reread.
     FlushAllCaches()
 
 app = webapp2.WSGIApplication(

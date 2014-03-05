@@ -81,7 +81,7 @@
                   <option value="ONE_YEAR">year</option>
                 </select> Ago
                 </span>
-                <br/><input type="submit" value="Save" ng-click="save(alert)"><input type="submit" value="Delete" ng-show="alert.key" ng-click="delete(alert)"><a href="#/Project/{{project}}">Cancel</a>
+                <br/><input type="submit" value="Save" ng-click="save()"><input type="submit" value="Delete" ng-show="alert.key" ng-click="remove()"><a href="#/Project/{{project}}">Cancel</a>
               </form>
               {{ message }}
             </script>
@@ -99,7 +99,7 @@
                       </li>
                     </ul>
                   </div>
-                  <br/><input type="submit" value="Save" ng-click="save(subscription)"><a href="#/Project/{{project}}">Cancel</a>
+                  <br/><input type="submit" value="Save" ng-click="save()"><a href="#/Project/{{project}}">Cancel</a>
                 </form>
             </script>
 
