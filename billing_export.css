@@ -54,44 +54,10 @@ main {
     display: block;
 }
 
-.progress {
-    width:100%;
-    height:20px;
-    border:1px solid black;
-    margin-bottom: 2px;
+.well {
+    background-color: white;
 }
 
-.progress-bar{
-    height:20px;
-}
-
-/**
-   upload statuses.
-   **/
-.uploading {
-    background-color: green;
-}
-
-.uploading {
-    background-color: green;
-}
-
-
-.initialized {
-    background-color: black;
-}
-
-.failed {
-    background-color: red;
-}
-
-.canceled {
-    background-color: orange;
-}
-
-.completed {
-    background-color: grey;
-}
 .unsubscribe-true {
     text-decoration: line-through;
     color: grey;

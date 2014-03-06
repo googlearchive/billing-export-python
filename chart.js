@@ -50,8 +50,8 @@ app.controller('AddAlert', function ($scope,$http,$location,$routeParams,
   });
 
   // Calls server to add alert, redirect to show alerts view on success.
-  $scope.save = function(alert){
-    $http.post('/addAlert',alert)
+  $scope.save = function(){
+    $http.post('/addAlert',$scope.alert)
       .success(function() {
         globalData.broadcastAlertChange();
         $location.path('/Project/' + $scope.project);
@@ -458,6 +458,13 @@ app.controller('BillingExportController', function ($scope,$http,$location,
       drawTreeChart(lastRow);
     },2);
   }
+
+  // utility function to navigate to a route from a button link.
+  $scope.go = function(path){
+    $location.path(path);
+  };
+
+
 
   // show project selectbox
   $scope.project = null;
