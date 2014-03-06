@@ -50,8 +50,8 @@ app.controller('AddAlert', function ($scope,$http,$location,$routeParams,
   });
 
   // Calls server to add alert, redirect to show alerts view on success.
-  $scope.save = function(alert){
-    $http.post('/addAlert',alert)
+  $scope.save = function(){
+    $http.post('/addAlert', $scope.alert)
       .success(function() {
         globalData.broadcastAlertChange();
         $location.path('/Project/' + $scope.project);
@@ -62,7 +62,7 @@ app.controller('AddAlert', function ($scope,$http,$location,$routeParams,
 // Edit or remove an existing alert.
 app.controller('EditAlert', function ($scope,$http,$location,$routeParams){
 
-  $http.post('/getAlert',{key:parseInt($routeParams.key)}).
+  $http.post('/getAlert', {key:parseInt($routeParams.key)}).
     success(function(data){
       $scope.alert = data;
     });

@@ -58,8 +58,8 @@ def UseRemoteGCS():
 # GCS stubs, uncomment this. It requires setting: config.service_account and
 # config.private_key_pem_file from a project service account.
 #
-if gcs_common.local_run():
-    UseRemoteGCS()
+# if gcs_common.local_run():
+#     UseRemoteGCS()
 
 # Bucket containing billing export data.
 BUCKET = config.bucket
@@ -395,6 +395,7 @@ class GetProfileInformation(webapp2.RequestHandler):
 
 def DeserializeAlert(json_string):
     """Return an Alert json object."""
+    logging.info(json_string)
     alert_obj = json.loads(json_string)
     # handle enum properties
     if 'range' in alert_obj and alert_obj['range'] is not None:
@@ -408,6 +409,8 @@ class AddAlert(webapp2.RequestHandler):
 
     def post(self):
         """Adds alert to the datastore."""
+        logging.info(type(self.request.body))
+        logging.info(self.request.body)
         alert_obj = DeserializeAlert(self.request.body)
         alert = Alert(parent=Alert.entity_group, **alert_obj)
         logging.debug('adding alert : ' + repr(alert))
