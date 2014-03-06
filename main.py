@@ -141,11 +141,12 @@ class Alert(ndb.Model):
                 if past_target_value == 0:
                     resulting_target_value = sys.float_info.max
                 else:
-                    resulting_target_value = ((current_target_value - past_target_value) /
-                                              past_target_value) * 100
-            logging.debug('calculating relative_change or total_change alert :\n' +
-                          repr(self) +
-                          '\ncurrent_target_value=' + str(current_target_value) +
+                    resulting_target_value = (
+                        (current_target_value - past_target_value) /
+                        past_target_value) * 100
+            logging.debug('relative_change or total_change alert :\n' +
+                          repr(self) + '\ncurrent_target_value=' +
+                          str(current_target_value) +
                           '\npast_target_value=' + str(past_target_value) +
                           '\npast_dtd.rows=' + repr(past_dtd.rows) +
                           '\npast_dtd.columns=' + repr(past_dtd.columns))
@@ -158,7 +159,7 @@ class Alert(ndb.Model):
         else:
             if resulting_target_value > self.trigger_value:
                 is_triggered = True
-        logging.debug('Evaluating alert ' + repr(self) + ' resulting_target_value='
+        logging.debug('Evaluating ' + repr(self) + ' resulting_target_value='
                       + repr(resulting_target_value) + ' and is_triggered=' +
                       str(is_triggered))
         return is_triggered
@@ -167,8 +168,9 @@ class Alert(ndb.Model):
     def forProject(cls, project_name):
         """Returns the alerts created for supplied project."""
         alert_keys = []
-        alert_keys = Alert.query(Alert.project == project_name,
-                                 ancestor=Alert.entity_group).fetch(keys_only=True)
+        alert_keys = Alert.query(
+            Alert.project == project_name,
+            ancestor=Alert.entity_group).fetch(keys_only=True)
         alerts = ndb.get_multi(alert_keys)
         return alerts
 
@@ -220,7 +222,8 @@ def MatchProjectDate(object_name):
         '(?:.*/)?(.*)-([0-9]{4})-([0-9]{2})-([0-9]{2}).json')
     project_match = re.match(project_re, object_name)
     if project_match is not None:
-        return project_match.group(1), date(*map(int, project_match.groups()[1:]))
+        return (project_match.group(1),
+                date(*[int(g) for g in project_match.groups()[1:]]))
     return None, None
 
 
@@ -262,7 +265,9 @@ class DataTableData(object):
         target_amount = 0
         for row in self.rows:
             for index, cell in enumerate(row[1:]):
-                if ((target is 'Total' and (not self.columns[index].startswith('Cloud/'))) or target == self.columns[index]):
+                if ((target is 'Total' and
+                     (not self.columns[index].startswith('Cloud/')))
+                   or target == self.columns[index]):
                     target_amount += cell
         return target_amount
 
@@ -284,9 +289,9 @@ def GetDataTableData(project_name, table_date=None):
     if table_date is not None:
         object_prefix += table_date.strftime('-%Y-%m-%d.json')
     else:
-        # query for last 90 days of data by using a 'marker' to start the listing
-        # from, this limits the size of the chart data object dropping older rows
-        # from the report.
+        # query for last 90 days of data by using a 'marker' to start the
+        # listing from, this limits the size of the chart data object
+        # dropping older rows from the report.
         ninty_days_ago = date.today() + timedelta(-90)
         object_marker = object_prefix + \
             ninty_days_ago.strftime('-%Y-%m-%d.json')
@@ -308,7 +313,7 @@ def GetDataTableData(project_name, table_date=None):
                 row.append(None)
             row[coli] = float(item['cost']['amount'])
         billing_file.close()
-    
+
     # Add product totals to the parsed sku amounts.
     AddCloudProductSums(line_items, date_hash)
     data_table_data = [[bill_date] + row for bill_date, row in
@@ -329,10 +334,10 @@ def GetAllBillingDataTable(project_name):
     cached_data_table = ChartData.get_by_id(project_name)
     if cached_data_table is not None:
         return cached_data_table.data_table
-    
+
     # read billing data from cloud storage
     data_table_data = GetDataTableData(project_name)
-    
+
     # create gviz data table from data
     data_table = gviz_api.DataTable([('Time', 'datetime', 'Time')] +
                                     [(li, 'number', li.split('/')[1])
@@ -352,8 +357,8 @@ class GetChartData(webapp2.RequestHandler):
 
     def get(self):
         """Calls GetAllBillingDataTable.
-
-        Returns: response in a format acceptible to google javascript visualization
+        Returns: response in a format acceptible to google javascript
+        visualization
         library.
         """
         data_table = GetAllBillingDataTable(self.request.get('project'))
@@ -543,14 +548,14 @@ class ProcessedNotifications(ndb.Model):
         return instance
 
     @classmethod
-    @ndb.transactional()
+    @ndb.transactional
     def processForToday(cls, project):
         """Mark a project as having been processed (alerts/emails sent) today.
 
         Args:
            project: Name of project to process. Returns: True if we haven't and
-           should process. This fuction modifies the map and assumes an email will
-           be sent.
+           should process. This fuction modifies the map and assumes an email
+           will be sent.
 
         Returns:
            True if the project was not processed today, False otherwise.
@@ -576,12 +581,13 @@ class ObjectChangeNotification(webapp2.RequestHandler):
     # get hostname from current request_url.
     host_name_re = re.compile('(.*)/')
 
-    def post(self):  # pylint: disable-msg=C6409
+    def post(self):
         """Process the notification event.
 
-        Invoked when the notification channel is first created with a sync event,
-        and then subsequently every time an object is added to the bucket, updated
-        (both content and metadata) or removed. It records the notification message
+        Invoked when the notification channel is first created with a sync
+        event, and then subsequently every time an object is added to the
+        bucket, updated (both content and metadata) or removed. It records the
+        notification message
         in the log.
         """
 
@@ -624,12 +630,13 @@ class ObjectChangeNotification(webapp2.RequestHandler):
         if len(triggered_alerts) or subscription.daily_summary:
             # built the data used by the email template
             host_url = self.host_name_re.match(self.request.url).group(1)
-            context = {'project': project_name,
-                       'project_url': host_url + '#/Project/' + project_name,
-                       'unsubscribe_url': host_url + '#/EditEmail/' + project_name,
-                       'alert_url': host_url + '#/EditAlert/' + project_name + '/',
-                       'triggered_alerts': triggered_alerts,
-                       'current_data': current_dtd}
+            context = {
+                'project': project_name,
+                'project_url': host_url + '#/Project/' + project_name,
+                'unsubscribe_url': host_url + '#/EditEmail/' + project_name,
+                'alert_url': host_url + '#/EditAlert/' + project_name + '/',
+                'triggered_alerts': triggered_alerts,
+                'current_data': current_dtd}
 
             # actually send the email.
             SendEmail(context, subscription.emails)
