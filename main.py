@@ -58,8 +58,8 @@ def UseRemoteGCS():
 # GCS stubs, uncomment this. It requires setting: config.service_account and
 # config.private_key_pem_file from a project service account.
 #
-if gcs_common.local_run():
-    UseRemoteGCS()
+# if gcs_common.local_run():
+#   UseRemoteGCS()
 
 # Bucket containing billing export data.
 BUCKET = config.bucket
