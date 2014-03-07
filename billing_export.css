@@ -1,9 +1,28 @@
+body {
+    font-family: 'Arvo', serif;
+    font-size: 14px;
+}
+
 main {
     padding-top: 60px;
 }
 
 .container {
     width: 80%;
+}
+
+.well {
+    background-color: #fff;
+    padding-top: 20px;
+}
+
+.nav {
+    font-size: 14px;
+}
+
+h1 {
+    font-size: 48px;
+    margin-top: 0px;
 }
 
 .navbar-inverse {
@@ -17,6 +36,25 @@ main {
 
 .navbar-inverse .navbar-nav>li>a:hover {
     color: #000;
+}
+
+#alert-actions {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.control-label {
+    text-align:left;
+    width: 60px;
+}
+
+.form {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.form-btn-offset {
+    padding-left: 5px;
 }
 
 .btn-primary {
@@ -41,7 +79,7 @@ main {
     width:100%;
     height:100%;
     z-index:1000;
-    background-color:grey;
+    background-color:#fff;
     opacity: .8;
 }
 
@@ -60,5 +98,5 @@ main {
 
 .unsubscribe-true {
     text-decoration: line-through;
-    color: grey;
+    color: #fff;
 }
