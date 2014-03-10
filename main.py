@@ -56,8 +56,12 @@ def UseLocalGCS():
 
 def UseRemoteGCS():
     """Use remote GCS via a signed certificate."""
-    logging.debug('using remote gcs')
-    from oauth2client.client import SignedJwtAssertionCredentials
+    logging.debug('Using remote gcs.')
+    try:
+        from oauth2client.client import SignedJwtAssertionCredentials
+    except ImportError:
+        logging.error('For local testing with remote GCS, install pycrypto.')
+        return
     http_object = httplib2.Http(timeout=60)
     service_account = config.service_account
     private_key_pem_file = config.private_key_pem_file
@@ -77,7 +81,7 @@ def UseRemoteGCS():
 # account.
 #
 if config.use_remote_gcs_when_local:
-   UseRemoteGCS()
+    UseRemoteGCS()
 
 # Bucket containing billing export data.
 BUCKET = config.bucket

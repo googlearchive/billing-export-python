@@ -207,10 +207,10 @@ app.controller('BillingExportController', function ($scope,$http,$location,
     vAxis: {textPosition: 'in'},
     curveType:'function',
     focusTarget:'datum',
-    width: '1200',
-    height: 400,
     legend: {position: 'top', maxLines:100,alignment:'center'},
-    chartArea:{height:'50%',width:'90%',left:0,top:170}
+    // Need to leave some room for legend,
+    // use as much width as possible.
+    chartArea:{height:'80%',width:'100%'}
   };
 
 
@@ -363,12 +363,20 @@ app.controller('BillingExportController', function ($scope,$http,$location,
 
     // Draw a TreeMap representing sku prices for the selected day.
     // row index is the index of the selected date on the line chart.
+    // when null, use the previous selected row
+    var previousSelectedRow;
+
     function drawTreeChart(rowIndex){
 
       // keep track of any selected sku so it can remain selected on the new
       // date. (keep showing compute engine on a new date if they have selected
       // compute engine).
       var previousSelection = treeChart.getSelection();
+      if(rowIndex){
+        previousSelectedRow = rowIndex;
+      }else{
+        rowIndex = previousSelectedRow;
+      }
 
       // now construct a new DataTable with new product/sku row.
       var treeDataTable ={cols:[],rows:[]};
@@ -467,11 +475,21 @@ app.controller('BillingExportController', function ($scope,$http,$location,
     }
 
     // being too fast causes chart to improperly draw.
+    // so delay drawing by two seconds.
     window.setTimeout(function(){
       drawLineChart();
       var lastRow = chartData.getNumberOfRows()-1;
       chart.setSelection([{row:lastRow,column:0}]);
       drawTreeChart(lastRow);
+
+      // will redraw with the new window width and height once the window
+      // resizes.
+      function resize () {
+        drawLineChart();
+        drawTreeChart();
+      }
+      window.onload = resize();
+      window.onresize = resize;
     },2);
   }
 
