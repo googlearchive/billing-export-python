@@ -1,3 +1,19 @@
+#!/usr/bin/python
+
+# Copyright 2014 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#            http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """View billing export data.
 
 An app engine application for parsing, displaing and triggering alerts from
@@ -24,6 +40,7 @@ import cloudstorage as gcs
 from cloudstorage import common as gcs_common
 from protorpc import messages
 from google.appengine.api import app_identity
+from google.appengine.ext import deferred
 from google.appengine.api import mail
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -55,11 +72,12 @@ def UseRemoteGCS():
 
 # Do convolutions to speak to remote cloud storage even when on a local
 # devserver. If you want to communicate to remote GCS, rather then use local
-# GCS stubs, uncomment this. It requires setting: config.service_account and
-# config.private_key_pem_file from a project service account.
+# GCS stubs, set this value in config.py to true. It requires setting:
+# config.service_account and config.private_key_pem_file from a project service
+# account.
 #
-#if gcs_common.local_run():
-#   UseRemoteGCS()
+if config.use_remote_gcs_when_local:
+   UseRemoteGCS()
 
 # Bucket containing billing export data.
 BUCKET = config.bucket
@@ -378,6 +396,13 @@ def FlushAllCaches():
     ndb.delete_multi(project_list_keys)
 
 
+def PopulateCaches():
+    """Loads all data into caches for faster initial page renders."""
+    billing_projects = GetBillingProjects()
+    for project in billing_projects:
+        deferred.defer(GetAllBillingDataTable, project)
+
+
 class FlushCache(webapp2.RequestHandler):
 
     """Handler to invoke FlushAllCaches."""
@@ -629,9 +654,10 @@ class ObjectChangeNotification(webapp2.RequestHandler):
         current_dtd = GetDataTableData(project_name, object_date)
         if len(triggered_alerts) or subscription.daily_summary:
             # built the data used by the email template
-            host_url = self.host_name_re.match(self.request.url).group(1)
+            host_url = self.host_name_re.match(self.request.url).group(1) + '/'
             context = {
                 'project': project_name,
+                'host_url': host_url,
                 'project_url': host_url + '#/Project/' + project_name,
                 'unsubscribe_url': host_url + '#/EditEmail/' + project_name,
                 'alert_url': host_url + '#/EditAlert/' + project_name + '/',
@@ -643,6 +669,9 @@ class ObjectChangeNotification(webapp2.RequestHandler):
 
         # Clear caches so project data is reread.
         FlushAllCaches()
+        # Refresh project list and project data in a new task queue.
+        deferred.defer(PopulateCaches)
+
 
 app = webapp2.WSGIApplication(
     [('/chart', GetChartData),

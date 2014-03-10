@@ -1,4 +1,4 @@
-application: bmenasha-1
+application: <enter-application-id>
 module: billing-export
 version: 1
 runtime: python27
@@ -40,3 +40,4 @@ libraries:
 
 builtins:
 - remote_api: on
+- deferred: on
