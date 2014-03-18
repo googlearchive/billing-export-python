@@ -37,7 +37,7 @@
       <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
           <a href="./" class="navbar-brand">Billing Data sample</a>
-          <p class="navbar-text navbar-right">{{profile.email}} | <a href="{{ profile.logoutUrl }}" class="navbar-link">Sign out</a></p>
+          <p class="navbar-text navbar-right"><a href="#" data-toggle="modal" class="navbar-link" data-target="#myModal">Help</a> | {{profile.email}} | <a href="{{ profile.logoutUrl }}" class="navbar-link">Sign out</a></p>
         </div>
       </nav>
       <main id="content" role="main">
@@ -102,7 +102,7 @@
                     <select name="sku" class="form-control" ng-init="alert.target_value = 'Total'" ng-model="alert.target_value" ng-options="s for s in skus"></select>
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <div class="col-sm-5 col-sm-offset-2">
                     <select class="form-control" ng-init="alert.trigger = 'TOTAL_AMOUNT'" ng-model="alert.trigger">
@@ -118,7 +118,7 @@
                     <span ng-show="alert.trigger == 'RELATIVE_CHANGE'" class=".form-control-static">%</span>
                   </div>
                  </div>
-                 
+
                 <div class="form-group" ng-show="alert.trigger != 'TOTAL_AMOUNT'">
                   <label class="control-label col-sm-2" for="range">From</label>
                   <div class="col-sm-10">
@@ -129,7 +129,7 @@
                     </select>
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <div class="col-sm-10 col-sm-offset-2">
                     <button type="submit" class="btn btn-success" value="Save" ng-click="save()">Save</button>
