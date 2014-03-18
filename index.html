@@ -24,102 +24,118 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing Data</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootflat.css">
     <link rel="stylesheet" href="billing_export.css">
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Arvo">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,800,700,400italic,600italic,700italic,800italic,300italic" rel="stylesheet" type="text/css">
   </head>
-  <body class="bs-docs-home" ng-controller="BillingExportController">
+  <body ng-controller="BillingExportController">
     <div class="loading-container" ng-show="showLoading">
       <img src="loader.gif" class="loading"/>
     </div>
-    <div >
-      <a class="sr-only" href="#content">Skip to main content</a>
-      <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav"
-	      role="banner">
+    <div>
+      <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
-	  <div class="navbar-header">
-	    <a href="./" class="navbar-brand"></a>
-	  </div>
-	  <nav class="collapse navbar-collapse bs-navbar-collapse"
-	       role="navigation">
-	    <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" data-toggle="modal" data-target="#myModal">Help?</a></li>
-	      <li><a href="mailto:{{profile.email}}">{{profile.email}}</a></li>
-	      <li><a href="{{ profile.logoutUrl }}">Sign out</a></li>
-	    </ul>
-	  </nav>
+          <a href="./" class="navbar-brand">Billing Data sample</a>
+          <p class="navbar-text navbar-right">{{profile.email}} | <a href="{{ profile.logoutUrl }}" class="navbar-link">Sign out</a></p>
         </div>
-      </header>
+      </nav>
       <main id="content" role="main">
         <div class="container">
-          <div class="well">
-            <h1>Billing Data</h1>
-
-            <select class="form-control input-sm" style="width:20%" ng-change="projectSelected()" ng-model="project" ng-options="p for p in projects" name="project"></select>
-
-            <div ng-view></div>
+          <div class="well clearfix">
+            <div class="row">
+              <div class="col-md-6">
+                <h1>Billing Data Alerts</h1>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="projectPicker">Select a project</label>
+                    <select id="projectPicker" class="form-control" ng-change="projectSelected()" ng-model="project" ng-options="p for p in projects" name="project"></select>
+                  </div>
+              </div>
+            </div>
+            <div class="row top-buffer">
+            <div class="col-md-12" ng-view></div>
+            </div>
             <!-- ShowAlerts Template -->
             <script type="text/ng-template" id="ShowAlerts">
-              <br/><u ng-show="alerts.length">Alerts</u>
-              <div ng-repeat="alert in alerts">
-                <b>{{ alert.name }}</b>
-                when
-                <i>{{alert.target_value}}</i>
+               <table ng-show="alerts.length" class="table table-striped">
+                 <tr>
+                   <th>Name</th><th>Condition</th><th></th>
+                 </tr>
+              <tr ng-repeat="alert in alerts">
+                <td>{{ alert.name }}</td>
+                <td><i>{{alert.target_value}}</i>
                   <span ng-show="alert.trigger == 'TOTAL_AMOUNT'">is greater then</span>
-                  <span ng-show="alert.trigger == 'RELATIVE_CHANGE'">percent change</span>
-                  <span ng-show="alert.trigger == 'TOTAL_CHANGE'">amount change</span>
-                <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">$</span> {{alert.trigger_value}} <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">.00</span><span ng-show="alert.trigger == 'RELATIVE_CHANGE'">%</span>
+                  <span ng-show="alert.trigger == 'RELATIVE_CHANGE'">has changed more than</span>
+                  <span ng-show="alert.trigger == 'TOTAL_CHANGE'">amount has changed more than</span>
+                <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">$</span>{{alert.trigger_value}}<span ng-show="alert.trigger != 'RELATIVE_CHANGE'">.00</span><span ng-show="alert.trigger == 'RELATIVE_CHANGE'">%</span>
                 <span ng-show="alert.trigger != 'TOTAL_AMOUNT'">
                 from one
                   <span ng-show="alert.range == 'ONE_DAY'">day</span>
                   <span ng-show="alert.range == 'ONE_WEEK'">week</span>
                   <span ng-show="alert.range == 'ONE_YEAR'">year</span>
                 ago
-                </span>
-                <a href="#/EditAlert/{{project}}/{{alert.key}}">edit</a>
-              </div>
+                </span></td>
+                <td><a class="btn btn-primary" href="#/EditAlert/{{project}}/{{alert.key}}">Edit</a></td>
+              </tr>
+              </table ng-show="alerts.length">
               <div id="alert-actions">
-                <a href="#/AddAlert/{{project}}">Add Alert</a>
-                <br />
-                <a href="#/EditEmail/{{project}}">Email Subscriptions</a>
+                <a class="btn btn-default" href="#/AddAlert/{{project}}">Add alert</a>
+                <a class="btn btn-default" href="#/EditEmail/{{project}}">Email subscriptions</a>
               </div>
+
             </script>
 
             <!-- AlertDetail Template. -->
             <script type="text/ng-template" id="AlertDetail">
-              <form name="AlertDetail" role="form" class="form">
+              <form name="AlertDetail" role="form" class="form form-horizontal">
                 <div class="form-group">
-                  <label class="control-label">Name</label>
-                  <input type="text" name="alert_name" ng-model="alert.name">
+                  <label for="alert_name" class="control-label col-sm-2">Name</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="alert_name" name="alert_name" ng-model="alert.name">
+                  </div>
                 </div>
                 <div class="form-group">
-                  <fieldset class="form-inline">
-                    <label class="control-label">When</label>
-                    <select class="form-control input-sm" style="width:15%" ng-init="alert.target_value = 'Total'" ng-model="alert.target_value" ng-options="s for s in skus"></select>
-                    <select class="form-control input-sm" style="width:15%" ng-init="alert.trigger = 'TOTAL_AMOUNT'" ng-model="alert.trigger">
-                      <option value="TOTAL_AMOUNT">Is Greater Then</option>
-                      <option value="RELATIVE_CHANGE">Percent Change</option>
-                      <option value="TOTAL_CHANGE">Amount Change</option>
+                  <label for="sku" class="control-label col-sm-2">Trigger when</label>
+                  <div class="col-sm-10">
+                    <select name="sku" class="form-control" ng-init="alert.target_value = 'Total'" ng-model="alert.target_value" ng-options="s for s in skus"></select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <div class="col-sm-5 col-sm-offset-2">
+                    <select class="form-control" ng-init="alert.trigger = 'TOTAL_AMOUNT'" ng-model="alert.trigger">
+                      <option value="TOTAL_AMOUNT">is greater than</option>
+                      <option value="RELATIVE_CHANGE">has a percent change of</option>
+                      <option value="TOTAL_CHANGE">changes amount by</option>
                     </select>
-                    <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">$</span>
+                  </div>
+                  <div class="col-sm-5">
+                    <span ng-show="alert.trigger != 'RELATIVE_CHANGE'" class=".form-control-static">$</span>
                     <input type="number" name="alert_trigger_value" ng-model="alert.trigger_value">
-                    <span ng-show="alert.trigger != 'RELATIVE_CHANGE'">.00</span>
-                    <span ng-show="alert.trigger == 'RELATIVE_CHANGE'">%</span>
-                    <span ng-show="alert.trigger != 'TOTAL_AMOUNT'">
-                      <label>From one</label>
-                      <select class="form-control input-sm" style="width:15%" ng-init="alert.range = 'ONE_DAY'" ng-model="alert.range">
-                        <option value="ONE_DAY">day</option>
-                        <option value="ONE_WEEK">week</option>
-                        <option value="ONE_YEAR">year</option>
-                      </select>
-                      <label>Ago</label>
-                    </span>
-                  </fieldset>
+                    <span ng-show="alert.trigger != 'RELATIVE_CHANGE'" class=".form-control-static">.00</span>
+                    <span ng-show="alert.trigger == 'RELATIVE_CHANGE'" class=".form-control-static">%</span>
+                  </div>
+                 </div>
+                 
+                <div class="form-group" ng-show="alert.trigger != 'TOTAL_AMOUNT'">
+                  <label class="control-label col-sm-2" for="range">From</label>
+                  <div class="col-sm-10">
+                    <select id="range" class="form-control" ng-init="alert.range = 'ONE_DAY'" ng-model="alert.range">
+                      <option value="ONE_DAY">one day ago</option>
+                      <option value="ONE_WEEK">one week ago</option>
+                      <option value="ONE_YEAR">one year ago</option>
+                    </select>
+                  </div>
                 </div>
+                
                 <div class="form-group">
-                  <button type="submit" class="btn btn-success" value="Save" ng-click="save()">Save</button>
-                  <button type="submit" class="btn btn-danger form-btn-offset" value="Delete" ng-show="alert.key" ng-click="remove()">Delete</button>
-                  <a href="#/Project/{{project}}" class="form-btn-offset">Cancel</a>
+                  <div class="col-sm-10 col-sm-offset-2">
+                    <button type="submit" class="btn btn-success" value="Save" ng-click="save()">Save</button>
+                    <button type="submit" class="btn btn-danger form-btn-offset" value="Delete" ng-show="alert.key" ng-click="remove()">Delete</button>
+                    <a href="#/Project/{{project}}" class="btn btn-default">Cancel</a>
+                  </div>
                 </div>
               </form>
               {{ message }}
@@ -128,13 +144,19 @@
 
             <!-- EmailDetail Template. -->
             <script type="text/ng-template" id="EmailDetail">
-              <form name="EmailDetail" class="form">
-                <div class="form-group form-inline">
-                  <label>Email</label>
-                  <input type="email" name="email" ng-model="subscriptionEmail">
-                  <button class="btn btn-xs" value="Add" ng-click="addEmail()">Add</button>
-                  <label>Daily Summary?</label>
-                  <input type="checkbox" name="dailySummaries" ng-model="subscription.dailySummary">
+              <form name="EmailDetail" class="form form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="email">Email address</label>
+                  <div class="col-sm-10">
+                    <input type="email" id="email" name="email" ng-model="subscriptionEmail">
+                    <button class="btn btn-xs" value="Add" ng-click="addEmail()">Add</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Daily Summary?</label>
+                    <div class="col-sm-10">
+                      <input type="checkbox" name="dailySummaries" ng-model="subscription.dailySummary">
+                    </div>
                 </div>
                 <div class="form-group">
                   <ul>
@@ -144,8 +166,12 @@
                       </li>
                   </ul>
                 </div>
-                <button type="submit" class="btn btn-success btn-sm" value="Save" ng-click="save()">Save</button>
-                <a href="#/Project/{{project}}" class="form-btn-offset">Cancel</a>
+                <div class="form-group">
+                  <div class="col-sm-10 col-sm-offset-2">
+                    <button type="submit" class="btn btn-success btn-sm" value="Save" ng-click="save()">Save</button>
+                    <a href="#/Project/{{project}}" class="btn btn-default">Cancel</a>
+                  </div>
+                </div>
               </form>
             </script>
 
@@ -174,26 +200,26 @@
                 </div>
               </div>
             </div>
-
+            <!--Div that will hold the line chart-->
             <div id="tree_chart_div"></div>
             <hr/>
             <div id="line_chart_div"></div>
-
+            <hr/>
             <form method="POST" action="/flushCache">
-              <button type="submit" class="btn btn-danger" value="Flush Cache">Flush All Caches</button>
+              <button type="submit" class="btn pull-right btn-danger" value="Flush Cache">Flush All Caches</button>
             </form>
           </div>
         </div>
       </main>
       <footer class="container text-center" role="contentinfo">
-        <a href="https://cloud.google.com/">Google Cloud Platform</a>
+        Powered by <a href="https://cloud.google.com/">Google Cloud Platform</a>
       </footer>
     </div>
     <script type="text/javascript" src="http://code.angularjs.org/1.2.8/angular.min.js"></script>
     <script type="text/javascript" src="http://code.angularjs.org/1.2.8/angular-route.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="chart.js"></script>
   </body>
 </html>

@@ -44,4 +44,5 @@ This application makes use of
 - *gviz_api* - https://code.google.com/p/google-visualization-python/
 - *google charts* - https://developers.google.com/chart/
 - *bootstrap* - http://getbootstrap.com/
+- *bootflat* - http://bootflat.github.io/
 - *angularjs* - http://angularjs.org/
