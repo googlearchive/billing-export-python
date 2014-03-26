@@ -99,6 +99,13 @@ class TestParseData(unittest.TestCase):
       logging.debug(repr(response))
       self.assertEqual(response.status_int, 200)
 
+  def testEmptyObjectChangeNotification(self):
+    data_dir = 'test/data/notifications'
+    for file_name in os.listdir(data_dir):
+      response = self.testapp.post('/objectChangeNotification')
+      logging.debug(repr(response))
+      self.assertEqual(response.status_int, 200)
+
   def testDailySummaryObjectChangeNotification(self):
     data_dir = 'test/data/notifications'
     for file_name in os.listdir(data_dir):
