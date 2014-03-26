@@ -12,9 +12,6 @@ handlers:
 - url: /loader.gif
   static_files: loader.gif
   upload: loader.gif
-- url: /bootflat.css
-  static_files: bootflat.css
-  upload: bootflat.css
 - url: /index.html
   static_files: index.html
   upload: index.html
@@ -29,6 +26,9 @@ handlers:
 - url: /billing_export.css
   static_files: billing_export.css
   upload: billing_export.css
+- url: /bootflat.css
+  static_files: bootflat.css
+  upload: bootflat.css
 - url: /objectChangeNofication
   script: main.app
 - url: /.*
