@@ -626,8 +626,14 @@ class ObjectChangeNotification(webapp2.RequestHandler):
                       x for x in self.request.headers.iteritems()]),
             self.request.body)
 
+        # Check that the request body is not empty (such as in sync events)
+        raw_json = self.request.body
+        if not len(raw_json) > 0:
+            logging.info('Request body was empty')
+            return
+
         # Query for this project's alerts
-        obj_notification = json.loads(self.request.body)
+        obj_notification = json.loads(raw_json)
         project_name, object_date = MatchProjectDate(obj_notification['name'])
 
         if not project_name or not object_date:
