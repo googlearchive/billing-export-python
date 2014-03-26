@@ -12,6 +12,9 @@ handlers:
 - url: /loader.gif
   static_files: loader.gif
   upload: loader.gif
+- url: /bootflat.css
+  static_files: bootflat.css
+  upload: bootflat.css
 - url: /index.html
   static_files: index.html
   upload: index.html
