@@ -6,6 +6,12 @@ Demonstrates parsing billing export files stored in a cloud storage bucket and r
 
 The dashboard presents a graph of the last 90 days of billing data sent by the  <a href="http://googlecloudplatform.blogspot.com/2013/12/ow-get-programmatic-access-to-your-billing-data-with-new-billing-api.html">billing export</a> feature. A complete walkthrough of the application, and enabling billing export, is <a href="https://www.youtube.com/watch?v=L3-e9imswtk">available on YouTube</a>.
 
+
+
+![Screenshot](https://storage.googleapis.com/platform-demo-billing-export-backup/Selection_142.png "Screenshot")
+
+
+
 ## Setup Instructions
 
 * *Setup Billing Export*. - Create a Cloud Storage bucket, and navigate to "Billing → Project → Billing Export". Enter the bucket name, a useful prefix, and select 'JSON' as the format.
