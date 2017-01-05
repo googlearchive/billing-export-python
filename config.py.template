@@ -12,7 +12,7 @@ default_to_email = <email_to_receive_notifications_when_none_configured>
 #
 # Enable dev_appserver.py to use remote GCS bucket
 #
-# For testing purposes it's can be useful to speak to a remove GCS bucket. If
+# For testing purposes it's can be useful to speak to a remote GCS bucket. If
 # this use_remote_gcs_when_local is set to true, additional configurations are
 # required when running local dev_servers.
 #
